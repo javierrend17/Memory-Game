@@ -43,6 +43,17 @@ for (let i = 0; i < emojis.length; i++) {
 }
 let cartas = document.querySelectorAll('.juego .carta')
 
+//Comportamientos de estilos css al redimensionar
+document.addEventListener('DOMContentLoaded', () => {
+    var anchoElemento = juegoElement.offsetWidth;
+    juegoElement.style.height = anchoElemento + 'px';
+});
+window.addEventListener('resize', () => {
+    var anchoElemento = juegoElement.offsetWidth;
+    juegoElement.style.height = anchoElemento + 'px';
+});
+
+
 
 //Funcion que mezcla las cartas
 function mezclarCartas() {
