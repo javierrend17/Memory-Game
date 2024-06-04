@@ -137,7 +137,7 @@ body{
   justify-content: center;
   align-items: center;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.182);
-  color: rgba(255, 255, 255, 0);
+  color: rgba(255, 255, 255, 0.209);
   font-size: clamp(46px, 5vw, 80px);
   margin-bottom: 0;
 }

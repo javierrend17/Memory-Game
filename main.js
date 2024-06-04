@@ -53,7 +53,31 @@ window.addEventListener('resize', () => {
     juegoElement.style.height = anchoElemento + 'px';
 });
 
+//Variables de memoria del juego
+const reiniciarVariables = () =>{
+    comparando = []
+    listaEncontrados = []
+    contador = 0
+    referenciaMovimientos = document.querySelector("#movimientos")
+    misCheckBox = document.querySelectorAll('.carta .check')
 
+    //Se convierte el elemento misCheckbox de tipo nodeList a un array
+    listaNoEncontrados = []
+    for (let i = 0; i < misCheckBox.length; i++) {
+        listaNoEncontrados[i] = misCheckBox[i]
+    }
+}
+
+var comparando = []
+var listaEncontrados = []
+var contador = 0
+var referenciaMovimientos = document.querySelector("#movimientos")
+var misCheckBox = document.querySelectorAll('.carta .check')
+//Se convierte el elemento misCheckbox de tipo nodeList a un array
+var listaNoEncontrados = []
+for (let i = 0; i < misCheckBox.length; i++) {
+    listaNoEncontrados[i] = misCheckBox[i]
+}
 
 //Funcion que mezcla las cartas
 function mezclarCartas() {
@@ -73,18 +97,15 @@ function mezclarCartas() {
     }
 
     listaEncontrados = []
+    reiniciarVariables()
 }
 
 mezclarCartas()
-
 
 const reiniciarContador = () =>{
     contador = 0
     referenciaMovimientos.innerHTML = `${contador}`
 }
-
-
-
 
 //BOTON DE REINICIAR
 //Reinicia todas las cartas y empieza el juego desde 0
@@ -121,118 +142,123 @@ function ocultarCartas() {
     })
 }
 
-//Variables de memoria del juego
-var comparando = []
-var recuerdo = []
-var listaEncontrados = []
-var contador = 0
-var referenciaMovimientos = document.querySelector("#movimientos")
-
-
 //Logica para manejar lo que sucede al tocar cada carta
 
 juegoElement.addEventListener('click', function(event) {
     if (event.target.tagName === 'INPUT') {
+
+        //Cuenta cuantos movimientos lleva el jugador y los muestra en pantalla
         contador++
         referenciaMovimientos.innerHTML = `${contador}`
+
+
+        //Muestra en consola la carta seleccionada a modo de guia
         var label = document.querySelector(`label[for=${event.target.id}]`)
-        var contenidoLabel = label.textContent
-        console.log(contenidoLabel)
+
+        //Añade el elemento de tipo Label encontrado a un array para compararlo más tarde
         if (event.target.checked === true) {
-            comparando.push(contenidoLabel)
+            comparando.push(label)
         }
-        if (comparando.length === 1 || comparando.length === 2){
-            recuerdo.push(event.target.id)
-            console.log("Este es un recuerdo de referencia: " + recuerdo)
-        }
-        
+
+        //Si el usuario selecciona una carta, esta se deshabilita y no se puede volver a ocultar hasta que el usuario revele una carta más
         if (comparando.length === 1) {
-            console.log(recuerdo[0])
-            document.querySelector(`#${recuerdo[0]}`).disabled = true
-        }else if (comparando.length === 2){
-            document.querySelector(`#${recuerdo[0]}`).disabled = false
+            misCheckBox.forEach(checkBox => {
+                if (comparando[0].htmlFor === checkBox.id) {
+                    checkBox.disabled = true
+                }
+            })
+        }else if (comparando.length === 2) {
+            misCheckBox.forEach(checkBox => {
+                if (comparando[1].htmlFor === checkBox.id) {
+                    checkBox.disabled = true
+                }
+            })
         }
-        if(comparando.length === 2){
-            console.log("Has revelado 2 cartas")
-            if (comparando[0] === comparando[1]) {
-                console.log("Has descubierto una pareja")
 
-                //Esto hace que las cartas no se puedan volver a ocultar una vez son reveladas
-                document.querySelector(`#${recuerdo[0]}`).disabled = true
-                document.querySelector(`#${recuerdo[1]}`).disabled = true
-                listaEncontrados.push([recuerdo[0],recuerdo[1]])
+        //Si el usuario revela 2 cartas
+        if (comparando.length === 2) {
+
+            //Si se encuentra una pareja
+            if (comparando[0].textContent === comparando[1].textContent){
+                //Se muestra un mensaje en consola que confirma que se encontró una pareja
+                console.log('Encontraste una pareja.')
+
+                //Guarda los elementos encontrados en una lista de array
+                listaEncontrados.push(comparando[0], comparando[1])
+
+                //Elimina los elementos encontrados de la lista de no encontrados
+                console.log(listaNoEncontrados[0].id);
+                for (let i = 0; i < listaNoEncontrados.length; i++) {
+                    console.log(`Comparando ${listaNoEncontrados[i].id} con ${comparando[0]} y ${comparando[1]}`)
+
+                    if (listaNoEncontrados[i].id === comparando[0].htmlFor){
+                        console.log('intento eliminar elemento con id:', listaNoEncontrados[i].id)
+                        listaNoEncontrados.splice(i, 1)
+                        i--
+
+                    }else if (listaNoEncontrados[i].id === comparando[1].htmlFor) {
+                        console.log('intento eliminar elemento con id:', listaNoEncontrados[i].id)
+                        listaNoEncontrados.splice(i, 1)
+                        i--
+                    }
+                }
+                console.log('Array final:', listaNoEncontrados);
+
+                //Muestra en consola los elementos encontrados
+                listaEncontrados.forEach(encontrado => {
+                    console.log(encontrado.htmlFor)
+                })
                 comparando = []
-                recuerdo = []
-                console.log("Hasta ahora has encontrado estas: "+listaEncontrados)
-            }else{
-                console.log("No le acertaste, borrare los recuerdos y las comparaciones y ocultare de nuevo las cartas")
 
-                //esto corrige el bug que hace que se puedan revelar mas de 2 elementos durante 1 turno
-                //Si no se entiende, comenta la linea de codigo y ve lo que sucede
-                for (let i = 0; i < emojis.length; i++) {
-                    var miInput = document.getElementById(`check${i}`)
-                    if(miInput.checked === false){
-                        miInput.disabled = true
-                    }
+                if (listaEncontrados.length === 16) {
+                    var jugadas = document.getElementById('jugadas')
+                    jugadas.innerHTML = contador
+                    
+                    var divAlerta = document.getElementById('alerta')
+                    divAlerta.classList.add("mostrarAlerta")
+                    reiniciarBtn.disabled = true
+                    
+                    var jugarDeNuevo = document.querySelector('.deNuevo')
+                    jugarDeNuevo.addEventListener('click', () => {
+                        divAlerta.classList.remove("mostrarAlerta")
+                        reiniciarContador()
+                        ocultarCartas()
+                        setTimeout(mezclarCartas,1000)
+                        reiniciarBtn.disabled = false
+                    })
                 }
+                
+                //Si no se encuentra una pareja
+            }else if (comparando[0].textContent != comparando[1].textContent) {
 
+                //Bloquea temporalmente todas las cartas
+                misCheckBox.forEach(checkbox => {
+                    checkbox.disabled = true
+                })
 
-                //Esto hace que las cartas se queden reveladas durante 0.8 segundos antes de volverse a ocultar
-                setTimeout(()=>{
-                    var referencia1 = document.getElementById(recuerdo[0])
-                    referencia1.checked = false
-                    var referencia2 = document.getElementById(recuerdo[1])
-                    referencia2.checked = false
-                    comparando = []
-                    recuerdo = []
-                    habilitarCartas()   
-                },800)
-
-                //esto vuelve a habilitar las casillas una vez ocultas las parejas erroneas
-                function habilitarCartas() {
-                    for (let i = 0; i < emojis.length; i++) {
-                        var miInput = document.getElementById(`check${i}`)
-                        if (!listaEncontrados.includes(miInput)) {
-                            miInput.disabled = false
+                //Vuelve a ocultar las cartas que no hacen match despues de 800 milisegundos
+                setTimeout(() => {
+                    misCheckBox.forEach(checkBox => {
+                        console.log(comparando[0]);
+                        if (checkBox.id === comparando[0].htmlFor) {
+                            checkBox.checked = false
+                        }else if (checkBox.id === comparando[1].htmlFor){
+                            checkBox.checked = false
                         }
-                    }
-                }
+                    })
+
+                    //Vuelve a habilitar las cartas que no se han encontrado
+                    misCheckBox.forEach(checkBox => {
+                        for (let i = 0; i < misCheckBox.length; i++) {
+                            if (checkBox === listaNoEncontrados[i]) {
+                                checkBox.disabled = false
+                            }
+                            
+                        }
+                    })
+                    comparando = []
+                }, 800)
             }
-        }
-        console.log(comparando)
+        }   
     }
-
-
-    console.log(listaEncontrados.length)
-    if (listaEncontrados.length === 8) {
-        console.log("Has ganado!!")
-        var jugadas = document.getElementById('jugadas')
-        jugadas.innerHTML = contador
-        contador = 0
-        comparando = []
-        recuerdo = []
-        listaEncontrados = []
-        
-        var divAlerta = document.getElementById('alerta')
-        divAlerta.classList.add("mostrarAlerta")
-        for (let i = 0; i < emojis.length; i++) {
-            var miInput = document.getElementById(`check${i}`)
-            miInput.disabled = true
-        }
-        var jugarDeNuevo = document.querySelector('.deNuevo')
-        jugarDeNuevo.addEventListener('click', () => {
-            divAlerta.classList.remove("mostrarAlerta")
-            reiniciarContador()
-            ocultarCartas()
-            setTimeout(mezclarCartas,1000)
-        })
-        //iteración para volver a habilitar cada casilla
-        for (let i = 0; i < emojis.length; i++) {
-            var miInput = document.getElementById(`check${i}`)
-            miInput.disabled = false
-        }
-        
-    }
-    console.log(`Llevas ${contador} movimientos!`)
 })
-
