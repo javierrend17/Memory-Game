@@ -57,7 +57,7 @@ body{
 }
 
 .info p{
-  width: clamp(110px, 10vw, 130px);
+  width: clamp(130px, 10vw, 130px);
   display: flex;
   justify-content: center;
   align-items: end;
