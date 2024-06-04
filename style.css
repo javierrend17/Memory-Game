@@ -52,14 +52,19 @@ body{
   font-weight: 600;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
+  margin-right: 10px;
 }
 
 .info p{
-  width: 60px;
+  width: clamp(110px, 10vw, 130px);
   display: flex;
   justify-content: center;
   align-items: end;
+}
+
+.info #movimientos{
+  width: 10px;
 }
 
 .control button{

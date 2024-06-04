@@ -24,6 +24,7 @@ bodyElement.innerHTML +=`
 `
 
 
+
 const juegoElement = document.querySelector('.juego')
 
 
