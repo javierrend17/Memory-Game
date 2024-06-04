@@ -59,6 +59,7 @@ const reiniciarVariables = () =>{
     comparando = []
     listaEncontrados = []
     contador = 0
+    referenciaMovimientos.innerHTML = `${contador}`
     referenciaMovimientos = document.querySelector("#movimientos")
     misCheckBox = document.querySelectorAll('.carta .check')
 
