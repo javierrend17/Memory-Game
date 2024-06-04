@@ -181,28 +181,23 @@ juegoElement.addEventListener('click', function(event) {
             //Si se encuentra una pareja
             if (comparando[0].textContent === comparando[1].textContent){
                 //Se muestra un mensaje en consola que confirma que se encontró una pareja
-                console.log('Encontraste una pareja.')
+                console.log('Encontraste una pareja, hasta ahora has encontrado:')
 
                 //Guarda los elementos encontrados en una lista de array
                 listaEncontrados.push(comparando[0], comparando[1])
 
                 //Elimina los elementos encontrados de la lista de no encontrados
-                console.log(listaNoEncontrados[0].id);
                 for (let i = 0; i < listaNoEncontrados.length; i++) {
-                    console.log(`Comparando ${listaNoEncontrados[i].id} con ${comparando[0]} y ${comparando[1]}`)
 
                     if (listaNoEncontrados[i].id === comparando[0].htmlFor){
-                        console.log('intento eliminar elemento con id:', listaNoEncontrados[i].id)
                         listaNoEncontrados.splice(i, 1)
                         i--
 
                     }else if (listaNoEncontrados[i].id === comparando[1].htmlFor) {
-                        console.log('intento eliminar elemento con id:', listaNoEncontrados[i].id)
                         listaNoEncontrados.splice(i, 1)
                         i--
                     }
                 }
-                console.log('Array final:', listaNoEncontrados);
 
                 //Muestra en consola los elementos encontrados
                 listaEncontrados.forEach(encontrado => {
@@ -239,7 +234,6 @@ juegoElement.addEventListener('click', function(event) {
                 //Vuelve a ocultar las cartas que no hacen match despues de 800 milisegundos
                 setTimeout(() => {
                     misCheckBox.forEach(checkBox => {
-                        console.log(comparando[0]);
                         if (checkBox.id === comparando[0].htmlFor) {
                             checkBox.checked = false
                         }else if (checkBox.id === comparando[1].htmlFor){
