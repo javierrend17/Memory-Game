@@ -63,7 +63,7 @@ body{
 }
 
 .info #movimientos{
-  width: 10px;
+  max-width: 30px;
 }
 
 .control button{
